@@ -21,20 +21,24 @@ export class UserService {
       request
     );
 
-    const totalUserWithSameUsername = await prismaClient.user.count({
+    const totalUserWithSameEmail = await prismaClient.user.count({
       where: {
-        username: registerRequest.username,
+        email: registerRequest.email,
       },
     });
 
-    if (totalUserWithSameUsername != 0) {
-      throw new ResponseError(400, "Username already exists");
+    if (totalUserWithSameEmail != 0) {
+      throw new ResponseError(400, "Email already exists");
     }
 
     registerRequest.password = await bcrypt.hash(registerRequest.password, 10);
 
     const user = await prismaClient.user.create({
-      data: registerRequest,
+      data: {
+        email: registerRequest.email,
+        password: registerRequest.password,
+        roleId: registerRequest.roleId
+      },
     });
 
     return toUserResponse(user);
@@ -45,7 +49,7 @@ export class UserService {
 
     let user = await prismaClient.user.findUnique({
       where: {
-        username: loginRequest.username,
+        email: loginRequest.email,
       },
     });
 
@@ -65,7 +69,10 @@ export class UserService {
       {
         id: user.id,
         email: user.email,
-        username: user.username,
+        password: user.password,
+        roleId: user.roleId,
+        token: user.token,
+        createdAt: user.createdAt
       },
       process.env.JWT_SECRET || "jifioqahdiwaio!jdoi2123k1",
       {
@@ -73,17 +80,8 @@ export class UserService {
       }
     );
 
-    user = await prismaClient.user.update({
-      where: {
-        username: loginRequest.username,
-      },
-      data: {
-        token: token,
-      },
-    });
-
     const response = toUserResponse(user);
-    response.token = user.token!;
+    response.token = token;
     return response;
   }
 
@@ -91,40 +89,48 @@ export class UserService {
     return toUserResponse(user);
   }
 
-  static async update(
-    user: User,
-    request: UpdateUserRequest
-  ): Promise<UserResponse> {
+  static async update(user: User, request: UpdateUserRequest): Promise<UserResponse> {
     const updateRequest = Validation.validate(UserValidation.UPDATE, request);
 
-    if (updateRequest.name) {
-      user.name = updateRequest.name;
-    }
-
-    if (updateRequest.password) {
-      user.password = await bcrypt.hash(updateRequest.password, 10);
-    }
-
     const result = await prismaClient.user.update({
-      where: {
-        username: user.username,
-      },
-      data: user,
+      where: { id: user.id },
+      data: updateRequest
     });
 
     return toUserResponse(result);
   }
 
   static async logout(user: User): Promise<UserResponse> {
-    const result = await prismaClient.user.update({
-      where: {
-        username: user.username,
+    return toUserResponse(user);
+  }
+
+  static async updateProfile(userId: number, fullname: string, phone: number, address: string, genderId: number) {
+    const profile = await prismaClient.profile.upsert({
+      where: { userId },
+      create: {
+        fullname,
+        phone,
+        address,
+        genderId,
+        userId
       },
-      data: {
-        token: null,
-      },
+      update: {
+        fullname,
+        phone,
+        address,
+        genderId
+      }
     });
 
-    return toUserResponse(result);
+    return profile;
+  }
+
+  static async getProfile(userId: number) {
+    const profile = await prismaClient.profile.findUnique({
+      where: { userId },
+      include: { gender: true }
+    });
+    
+    return profile;
   }
 }
