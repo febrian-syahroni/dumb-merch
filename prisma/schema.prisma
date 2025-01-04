@@ -20,14 +20,15 @@ model User {
   email       String    @unique
   password    String
   roleId      Int
+  token       String?
   createdAt   DateTime  @default(now())
-  role        Role      @relation(fields: [roleId], references: [id])
+  role        UserRole  @relation(fields: [roleId], references: [id])
   profile     Profile?
   cart        Cart?
   transactions Transaction[]
 }
 
-model Role {
+model UserRole {
   id     Int    @id @default(autoincrement())
   name   String
   users  User[]
