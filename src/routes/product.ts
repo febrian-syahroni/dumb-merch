@@ -1,7 +1,7 @@
 // src/routes/productRoutes.ts
 import express from "express";
-import { getProducts, addProduct } from "../controllers/productController";
-import { authMiddleware } from "../middlewares/authMiddleware";
+import { getProducts, addProduct } from "../controllers/product";
+import { authMiddleware } from "../middlewares/auth";
 
 const router = express.Router();
 
