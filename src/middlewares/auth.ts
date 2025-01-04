@@ -1,18 +1,19 @@
 // src/middlewares/authMiddleware.ts
-import { Request, Response, NextFunction } from "express";
+import { RequestHandler } from "express";
 import jwt from "jsonwebtoken";
+import { User } from "@prisma/client";
 
-export const authMiddleware = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const authMiddleware: RequestHandler = (req, res, next) => {
   const token = req.header("Authorization")?.replace("Bearer ", "");
-  if (!token) return res.status(401).json({ error: "Access denied" });
+  if (!token) {
+    res.status(401).json({ error: "Access denied" });
+    return;
+  }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as User;
     req.user = decoded;
+    console.log("User decoded:", req.user);
     next();
   } catch (error) {
     res.status(400).json({ error: "Invalid token" });
