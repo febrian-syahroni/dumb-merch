@@ -5,10 +5,12 @@ import productRoutes from "./routes/product";
 import cartRoutes from "./routes/cart";
 import transactionRoutes from "./routes/transaction";
 import userRoutes from "./routes/user";
+import cors from "cors";
 
 dotenv.config();
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
