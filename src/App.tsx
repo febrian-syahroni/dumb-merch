@@ -1,5 +1,5 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LoginPage from "./pages/login-page";
 import RegisterPage from "./pages/register-page";
 import ProfilePage from "./pages/profile-page";
@@ -11,27 +11,38 @@ import EditCategoryPage from "./pages/edit-category-page";
 import EditProductPage from "./pages/edit-product-page";
 import ComplainPage from "./pages/complain-page";
 import MessagePage from "./pages/message-page";
+import RoleUser from "./components/roleUser";
+import RoleAdmin from "./components/roleAdmin";
+
+
+const router = createBrowserRouter([
+  { path: "/login", element: <LoginPage /> },
+  { path: "/register", element: <RegisterPage /> },
+  {
+    path: "/",
+    element: <RoleUser allowedRoles={[2]} />, // Bungkus semua route yang membutuhkan autentikasi
+    children: [
+      { path: "profile", element: <ProfilePage /> },
+      { index: true, element: <UserPage /> },
+      { path: "user/message", element: <MessagePage /> },
+      { path: "detail-product/:id", element: <DetailItem /> },
+    ],
+  },
+  {
+    path: "/",
+    element: <RoleAdmin allowedRoles={[1]} />,
+    children: [
+      { path: "admin/category", element: <CategoryListPage /> },
+      { path: "admin/category/edit", element: <EditCategoryPage /> },
+      { path: "admin/product", element: <ProductListPage /> },
+      { path: "admin/product/edit", element: <EditProductPage /> },
+      { path: "admin/complain", element: <ComplainPage /> },
+    ]
+  }
+]);
 
 function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="">
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/user" element={<UserPage />} />
-          <Route path="/user/message" element={<MessagePage />} />
-          <Route path="/detail" element={<DetailItem />} />
-          <Route path="/category" element={<CategoryListPage />} />
-          <Route path="/category/edit" element={<EditCategoryPage />} />
-          <Route path="/product" element={<ProductListPage />} />
-          <Route path="/product/edit" element={<EditProductPage />} />
-          <Route path="/complain" element={<ComplainPage />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
