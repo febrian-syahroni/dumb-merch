@@ -9,8 +9,8 @@ export const registerUser: RequestHandler = async (req, res) => {
       user: {
         id: user.id,
         email: user.email,
-        roleId: user.roleId
-      }
+        roleId: user.roleId,
+      },
     });
   } catch (error) {
     if (error instanceof Error) {
@@ -23,8 +23,8 @@ export const registerUser: RequestHandler = async (req, res) => {
 
 export const loginUser: RequestHandler = async (req, res) => {
   try {
-    const token = await loginUserService(req.body);
-    res.json({ token });
+    const { token, roleId } = await loginUserService(req.body);
+    res.json({ token, roleId });
   } catch (error) {
     if (error instanceof Error) {
       res.status(400).json({ error: error.message });

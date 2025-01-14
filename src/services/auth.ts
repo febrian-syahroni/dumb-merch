@@ -8,8 +8,7 @@ const secret = process.env.JWT_SECRET!;
 
 const registerSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(6),
-  roleId: z.number()
+  password: z.string().min(6)
 });
 
 export const registerUserService = async (data: any) => {
@@ -21,8 +20,8 @@ export const registerUserService = async (data: any) => {
     data: {
       email,
       password: hashedPassword,
-      roleId
-    }
+      roleId,
+    },
   });
 
   return user;
@@ -30,19 +29,19 @@ export const registerUserService = async (data: any) => {
 
 const loginSchema = z.object({
   email: z.string().email(),
-  password: z.string()
+  password: z.string(),
 });
 
-export const loginUserService = async (data: any) => {
-  const { email, password } = loginSchema.parse(data);
+export const loginUserService = async (body: any) => {
+  const { email, password } = body;
   const user = await prisma.user.findUnique({ where: { email } });
+  
   if (!user) throw new Error("Invalid credentials");
-
+  
   const validPassword = await bcrypt.compare(password, user.password);
   if (!validPassword) throw new Error("Invalid credentials");
-
-  const token = jwt.sign({ userId: user.id }, secret, { expiresIn: '24h' });
   
-  // Set cookie with token
-  return { token }; // Kembalikan token untuk digunakan di frontend
+  const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET!);
+  
+  return { token, roleId: user.roleId };
 };
