@@ -6,6 +6,7 @@ import cartRoutes from "./routes/cart";
 import transactionRoutes from "./routes/transaction";
 import userRoutes from "./routes/user";
 import cors from "cors";
+import categoryRouter from "./routes/category";
 
 dotenv.config();
 const app = express();
@@ -17,6 +18,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/transactions", transactionRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/categories", categoryRouter);
 
 app.listen(8080, () => console.log("server berjalan di port 8080"))
 
