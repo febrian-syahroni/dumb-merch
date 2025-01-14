@@ -7,7 +7,7 @@
     "skipLibCheck": true,
     "baseUrl": "../",
     "paths": {
-      "@/*": ["./frontend/*"]
+      "@/*": ["./frontend/src/*"]
     },
 
     /* Bundler mode */
