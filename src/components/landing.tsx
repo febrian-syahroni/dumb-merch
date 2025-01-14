@@ -1,10 +1,10 @@
-import dumbMerch from "@/src/assets/dumb-merch.svg";
-import motto from "@/src/assets/easy-fast-reliable.svg";
+import dumbMerch from "@/assets/dumb-merch.svg";
+import motto from "@/assets/easy-fast-reliable.svg";
 import { Link } from "react-router-dom";
 
 export default function Landing() {
   return (
-    <div className="absolute scale-[85%] left-[-60px] inset-y-0 flex flex-col justify-center">
+    <div className="scale-[85%] flex flex-col justify-center">
       <div>
         <div className="mb-[35px]">
           <img width={264} height={264} src={dumbMerch} />

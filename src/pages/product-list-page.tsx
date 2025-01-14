@@ -1,158 +1,106 @@
-import logo from "@/src/assets/logo.svg";
+import { CreateProduct } from "@/components/dialogs/add-product";
+import axios from "axios";
+import { useEffect, useState } from "react";
+
+export interface Product {
+  id: string; // Adjust the type based on your database schema
+  name: string;
+  price: number;
+  description: string;
+  imageUrl: string; // Optional, depending on your schema
+  stock: number;
+}
+
+function limitWords(text: string, maxWords: number) {
+  const words = text.split(' '); // Pisahkan kata berdasarkan spasi
+  return words.slice(0, maxWords).join(' '); // Ambil maxWords kata pertama dan gabungkan kembali
+}
 
 export default function ProductListPage() {
-  return (
-    <div className="relative flex flex-col justify-center px-[80px] bg-[#0B0B0B] text-white w-full h-screen">
-      {/* Header */}
-      <div className="absolute flex justify-between px-[50px] py-[20px] left-0 top-0 w-full">
-        <img width={50} src={logo} alt="logo" />
-        <div className="flex text-[15px] font-bold items-center gap-[23px]">
-          <p>Complain</p>
-          <p>Category</p>
-          <p className="text-[#F74D4D]">Product</p>
-          <p>Logout</p>
-        </div>
-      </div>
+  const [products, setProducts] = useState<Product[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
-      <h1 className="mb-[27px] text-xl font-bold">List Category</h1>
+  const formatRupiah = (number: number) => {
+    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(number);
+  };
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get<Product[]>("http://localhost:8080/api/products"); // Update the endpoint URL if necessary
+        setProducts(response.data);
+      } catch (err) {
+        setError("Failed to fetch products");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
+
+  return (
+    <div className="absolute top-[100px] px-[80px] flex flex-col gap-[20px] w-full">
+
+      <h1 className="text-xl font-bold">List Products</h1>
+
+      <CreateProduct />
 
       {/* Table */}
-      <div className="text-base bg-[#303030]">
+      <div className="text-base overflow-y-auto hide-scrollbar max-h-[400px] bg-[#303030]">
         <table className="table-auto w-full border-b">
-          <thead className="">
+          <thead className="sticky top-0 shadow-lg">
             <tr className="h-[50px]">
-              <th className="font-bold p-2 border-b text-left bg-[#303030] text-white">
-                No
+              <th className="font-bold p-2 text-left bg-gray-800 text-white">
+                ID
               </th>
-              <th className="font-bold p-2 border-b text-left bg-[#303030] text-white">
+              <th className="font-bold p-2 text-left bg-gray-800 text-white">
                 Photo
               </th>
-              <th className="font-bold p-2 border-b text-left bg-[#303030] text-white">
+              <th className="font-bold p-2 text-left bg-gray-800 text-white">
                 Product Name
               </th>
-              <th className="font-bold p-2 border-b text-left bg-[#303030] text-white">
+              <th className="font-bold p-2 text-left bg-gray-800 text-white">
                 Product Desc
               </th>
-              <th className="font-bold p-2 border-b text-left bg-[#303030] text-white">
+              <th className="font-bold p-2 text-left bg-gray-800 text-white">
                 Price
               </th>
-              <th className="font-bold p-2 border-b text-left bg-[#303030] text-white">
+              <th className="font-bold p-2 text-left bg-gray-800 text-white">
                 Qty
               </th>
-              <th className="font-bold px-4 border-b text-left bg-[#303030] text-white">
+              <th className="font-bold px-4 text-left bg-gray-800 text-white">
                 Action
               </th>
             </tr>
           </thead>
           <tbody>
-            <tr className=" odd:bg-[#232323]">
-              <td className="p-2 border-b text-left">1</td>
-              <td className="p-2 border-b text-left">Mouse</td>
-              <td className="p-2 border-b text-left">Mouse</td>
-              <td className="p-2 border-b text-left">Mouse</td>
-              <td className="p-2 border-b text-left">Rp.500.000</td>
-              <td className="p-2 border-b text-left">600</td>
-              <td className="py-2 px-4 border-b text-left">
-                <div className="flex h-[30px] gap-[15px]">
-                  <button className="rounded-[5px] w-[100px] bg-[#56C05A]">
-                    Edit
-                  </button>
-                  <button className="rounded-[5px] w-[100px] bg-[#F74D4D]">
-                    Delete
-                  </button>
-                </div>
-              </td>
-            </tr>
-            <tr className=" odd:bg-[#232323]">
-              <td className="p-2 border-b text-left">2</td>
-              <td className="p-2 border-b text-left">Keyboard</td>
-              <td className="p-2 border-b text-left">Keyboard</td>
-              <td className="p-2 border-b text-left">Keyboard</td>
-              <td className="p-2 border-b text-left">Rp.500.000</td>
-              <td className="p-2 border-b text-left">600</td>
-              <td className="py-2 px-4 border-b text-left">
-                <div className="flex h-[30px] gap-[15px]">
-                  <button className="rounded-[5px] w-[100px] bg-[#56C05A]">
-                    Edit
-                  </button>
-                  <button className="rounded-[5px] w-[100px] bg-[#F74D4D]">
-                    Delete
-                  </button>
-                </div>
-              </td>
-            </tr>
-            <tr className=" odd:bg-[#232323]">
-              <td className="p-2 border-b text-left">3</td>
-              <td className="p-2 border-b text-left">bag</td>
-              <td className="p-2 border-b text-left">bag</td>
-              <td className="p-2 border-b text-left">bag</td>
-              <td className="p-2 border-b text-left">Rp.500.000</td>
-              <td className="p-2 border-b text-left">600</td>
-              <td className="py-2 px-4 border-b text-left">
-                <div className="flex h-[30px] gap-[15px]">
-                  <button className="rounded-[5px] w-[100px] bg-[#56C05A]">
-                    Edit
-                  </button>
-                  <button className="rounded-[5px] w-[100px] bg-[#F74D4D]">
-                    Delete
-                  </button>
-                </div>
-              </td>
-            </tr>
-            <tr className="odd:bg-[#232323]">
-              <td className="p-2 border-b text-left">4</td>
-              <td className="p-2 border-b text-left">Monitor</td>
-              <td className="p-2 border-b text-left">Monitor</td>
-              <td className="p-2 border-b text-left">Monitor</td>
-              <td className="p-2 border-b text-left">Rp.500.000</td>
-              <td className="p-2 border-b text-left">600</td>
-              <td className="py-2 px-4 border-b text-left">
-                <div className="flex h-[30px] gap-[15px]">
-                  <button className="rounded-[5px] w-[100px] bg-[#56C05A]">
-                    Edit
-                  </button>
-                  <button className="rounded-[5px] w-[100px] bg-[#F74D4D]">
-                    Delete
-                  </button>
-                </div>
-              </td>
-            </tr>
-            <tr className=" odd:bg-[#232323]">
-              <td className="p-2 border-b text-left">5</td>
-              <td className="p-2 border-b text-left">Doll</td>
-              <td className="p-2 border-b text-left">Doll</td>
-              <td className="p-2 border-b text-left">Doll</td>
-              <td className="p-2 border-b text-left">Rp.500.000</td>
-              <td className="p-2 border-b text-left">600</td>
-              <td className="py-2 px-4 border-b text-left">
-                <div className="flex h-[30px] gap-[15px]">
-                  <button className="rounded-[5px] w-[100px] bg-[#56C05A]">
-                    Edit
-                  </button>
-                  <button className="rounded-[5px] w-[100px] bg-[#F74D4D]">
-                    Delete
-                  </button>
-                </div>
-              </td>
-            </tr>
-            <tr className=" odd:bg-[#232323]">
-              <td className="p-2 border-b text-left">6</td>
-              <td className="p-2 border-b text-left">Pillow</td>
-              <td className="p-2 border-b text-left">Pillow</td>
-              <td className="p-2 border-b text-left">Pillow</td>
-              <td className="p-2 border-b text-left">Rp.500.000</td>
-              <td className="p-2 border-b text-left">600</td>
-              <td className="py-2 px-4 border-b text-left">
-                <div className="flex h-[30px] gap-[15px]">
-                  <button className="rounded-[5px] w-[100px] bg-[#56C05A]">
-                    Edit
-                  </button>
-                  <button className="rounded-[5px] w-[100px] bg-[#F74D4D]">
-                    Delete
-                  </button>
-                </div>
-              </td>
-            </tr>
+            {products.map(item => (
+              <tr key={item.id} className="odd:bg-[#232323]">
+                <td className="p-2 border-b text-left">{item.id}</td>
+                <td className="p-2 border-b text-left"><img width={50} src={item.imageUrl} alt="" /></td>
+                <td className="p-2 border-b text-left">{item.name}</td>
+                <td className="p-2 overflow-y-auto border-b text-left">
+                  <p className="w-[300px] ">{limitWords(item.description, 10)}</p>
+                </td>
+                <td className="p-2 border-b text-left">{formatRupiah(item.price)}</td>
+                <td className="p-2 border-b text-left">{item.stock}</td>
+                <td className="py-2 px-4 border-b text-left">
+                  <div className="flex h-[30px] gap-[15px]">
+                    <button className="rounded-[5px] w-[100px] bg-[#56C05A]">
+                      Edit
+                    </button>
+                    <button className="rounded-[5px] w-[100px] bg-[#F74D4D]">
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

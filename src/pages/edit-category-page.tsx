@@ -1,4 +1,4 @@
-import logo from "@/src/assets/logo.svg";
+import logo from "@/assets/logo.svg";
 
 export default function EditCategoryPage() {
   return (

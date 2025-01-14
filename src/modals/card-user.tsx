@@ -1,4 +1,4 @@
-import user from "@/src/assets/febrian.jpg";
+import user from "@/assets/febrian.jpg";
 
 export default function CardUser() {
   return (

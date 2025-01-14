@@ -1,22 +1,12 @@
-import logo from "@/src/assets/logo.svg";
-import photo from "@/src/assets/febrian.jpg";
+import photo from "@/assets/febrian.jpg";
 import ItemTransaction from "../modals/item-transaction";
 
 export default function ProfilePage() {
   return (
-    <div className="relative flex justify-between items-center px-[80px] bg-[#0B0B0B] text-white w-full h-screen">
-      {/* Header */}
-      <div className="absolute flex justify-between px-[50px] py-[20px] left-0 top-0 w-full">
-        <img width={50} src={logo} alt="logo" />
-        <div className="flex text-[15px] font-bold items-center gap-[23px]">
-          <p>Complain</p>
-          <p className="text-[#F74D4D]">Profile</p>
-          <p>Logout</p>
-        </div>
-      </div>
+    <div>
 
       {/* Profile */}
-      <div className="flex w-full justify-between">
+      <div className="flex w-full gap-[25px] justify-between">
         <div className="flex flex-col gap-[25px]">
           <h1 className="font-bold text-[24px] text-[#F74D4D]">My Profile</h1>
           <div className="flex gap-[25px]">
@@ -25,7 +15,7 @@ export default function ProfilePage() {
               src={photo}
               alt="img"
             />
-            <div className="flex flex-col w-[355px] text-[13px] justify-between">
+            <div className="flex flex-col w-[355px] gap-[10px] text-[13px] justify-between">
               <div className="flex flex-col">
                 <h1 className="text-[15px] text-[#F74D4D]">Name</h1>
                 <h1>Febrian Syahroni</h1>
@@ -60,7 +50,7 @@ export default function ProfilePage() {
             My Transaction
           </h1>
 
-          <div className="flex flex-col overflow-y-auto scrollbar h-[355px] gap-[15px]">
+          <div className="flex flex-col overflow-y-auto hide-scrollbar h-[355px] gap-[15px]">
             {/* Transactions */}
             <ItemTransaction />
             <ItemTransaction />

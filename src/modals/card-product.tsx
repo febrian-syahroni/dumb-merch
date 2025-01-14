@@ -1,8 +1,8 @@
-import product from "@/src/assets/products/mouse.jpg";
+import product from "@/assets/products/mouse.jpg";
 
 export default function CardProduct() {
   return (
-    <div className="flex flex-col overflow-hidden rounded-md min-w-[200px] h-full">
+    <div className="flex flex-col overflow-hidden rounded-md h-[300px]">
       <div className="w-full h-[70%]">
         <img
           className="object-cover object-center w-full h-full"

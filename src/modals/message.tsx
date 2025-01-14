@@ -1,5 +1,5 @@
-import triangle from "@/src/assets/icons/triangle.svg";
-import user from "@/src/assets/febrian.jpg";
+import triangle from "@/assets/icons/triangle.svg";
+import user from "@/assets/febrian.jpg";
 
 export default function Message() {
   return (

@@ -1,5 +1,5 @@
-import logo from "@/src/assets/logo.svg";
-import product from "@/src/assets/products/mouse.jpg";
+import logo from "@/assets/logo.svg";
+import product from "@/assets/products/mouse.jpg";
 
 export default function ItemTransaction() {
   return (

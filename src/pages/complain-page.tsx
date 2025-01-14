@@ -1,26 +1,15 @@
-import logo from "@/src/assets/logo.svg";
 import CardUser from "../modals/card-user";
-import send from "@/src/assets/icons/send.svg";
+import send from "@/assets/icons/send.svg";
 import Message from "../modals/message";
 
 export default function ComplainPage() {
   return (
-    <div className="relative flex flex-col justify-center bg-[#0B0B0B] text-white w-full h-screen">
-      {/* Header */}
-      <div className="absolute flex justify-between px-[50px] py-[20px] left-0 top-0 w-full">
-        <img width={50} src={logo} alt="logo" />
-        <div className="flex text-[15px] font-bold items-center gap-[23px]">
-          <p className="text-[#F74D4D]">Complain</p>
-          <p>Category</p>
-          <p>Product</p>
-          <p>Logout</p>
-        </div>
-      </div>
+    <div className="flex flex-col justify-center bg-[#0B0B0B] text-white w-full h-screen">
 
       {/* Complain */}
       <div className="flex h-full">
         {/* users */}
-        <div className="flex overflow-y-auto scrollbar flex-col gap-[30px] px-[50px] mt-[130px] w-1/3">
+        <div className="flex overflow-y-auto hide-scrollbar flex-col gap-[30px] px-[50px] mt-[130px] w-1/3 h-[75%]">
           <CardUser />
           <CardUser />
           <CardUser />
@@ -35,8 +24,8 @@ export default function ComplainPage() {
           <CardUser />
           <CardUser />
         </div>
-        <div className="flex flex-col px-[40px] pb-[50px] justify-end gap-[40px] border-l w-full">
-          <div className="flex flex-col overflow-y-auto scrollbar gap-[20px] h-[70%]">
+        <div className="flex flex-col px-[40px] pb-[50px] justify-end gap-[40px] border-l border-[#272727] w-full">
+          <div className="flex flex-col overflow-y-auto hide-scrollbar gap-[20px] h-[70%]">
             <Message />
             <Message />
             <Message />
