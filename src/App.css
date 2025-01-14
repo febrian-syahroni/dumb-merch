@@ -3,23 +3,12 @@
 @tailwind utilities;
 
 @layer utilities {
-  .scrollbar::-webkit-scrollbar {
-    width: 20px;
-    height: 20px;
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 
-  .scrollbar::-webkit-scrollbar-track {
-    border-radius: 100vh;
-    background: #0b0b0b;
-  }
-
-  .scrollbar::-webkit-scrollbar-thumb {
-    background: #f74d4d;
-    border-radius: 100vh;
-    border: 3px solid #0b0b0b;
-  }
-
-  .scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #c0a0b9;
+  .hide-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
   }
 }
