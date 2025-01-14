@@ -13,4 +13,11 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+api.interceptors.response.use((response) => {
+  if (response.data.token) {
+    document.cookie = `token=${response.data.token}; path=/;`;
+  }
+  return response;
+});
+
 export default api;
