@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import axios from "@/axios"
+import { ImSpinner3 } from "react-icons/im"
 
 export function CreateProduct() {
   const [name, setName] = useState("");
@@ -20,6 +21,7 @@ export function CreateProduct() {
     []
   );
   const [image, setImage] = useState<File | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   // Fetch categories from the server
@@ -45,6 +47,8 @@ export function CreateProduct() {
       return;
     }
 
+    setIsLoading(true);
+
     const formData = new FormData();
     formData.append("name", name);
     formData.append("description", description);
@@ -67,6 +71,8 @@ export function CreateProduct() {
     } catch (error) {
       console.error("Error creating product:", error);
       alert("Failed to create product. Please make sure you are logged in.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -178,14 +184,20 @@ export function CreateProduct() {
             </div>
           </div>
 
-          <div>
-            <button
-              type="submit"
-              className="absolute shadow-lg m-[25px] bottom-0 right-0 text-white px-4 py-2 rounded bg-[#56C05A]"
-            >
-              Create Product
-            </button>
-          </div>
+          <Button
+            type="submit"
+            disabled={isLoading}
+            className={`absolute flex bottom-0 right-0 bg-[#56C05A] m-5 rounded-[5px] ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
+          >
+            {isLoading ? (
+              <span className="flex items-center justify-center">
+                <ImSpinner3 className="animate-spin mr-2" />
+                Creating...
+              </span>
+            ) : (
+              'Create Product'
+            )}
+          </Button>
         </form>
       </DialogContent>
     </Dialog>
