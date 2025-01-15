@@ -8,7 +8,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import axios from "axios"
+import axios from "@/axios"
 
 export function CreateProduct() {
   const [name, setName] = useState("");
@@ -26,7 +26,7 @@ export function CreateProduct() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/api/categories");
+        const response = await axios.get("/categories");
         setCategories(response.data.data || []);
       } catch (error) {
         console.error("Failed to fetch categories:", error);
@@ -54,7 +54,7 @@ export function CreateProduct() {
     formData.append("image", image);
 
     try {
-      const response = await axios.post("http://localhost:8080/api/products", formData, {
+      const response = await axios.post("/products", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -62,11 +62,11 @@ export function CreateProduct() {
 
       if (response.status === 201) {
         alert("Product created successfully!");
-        navigate("/"); // Redirect to product list or any page
+        navigate("/admin/product"); // Redirect to product list or any page
       }
     } catch (error) {
       console.error("Error creating product:", error);
-      alert("Failed to create product");
+      alert("Failed to create product. Please make sure you are logged in.");
     }
   };
 
