@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 @layer utilities {
+  .description {
+    white-space: pre-wrap;
+  }
+
   .hide-scrollbar::-webkit-scrollbar {
     display: none;
   }

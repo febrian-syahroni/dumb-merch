@@ -27,7 +27,7 @@ export default function DetailItem() {
     };
 
     fetchProductDetail();
-  }, [id, product]);
+  }, []);
 
   if (!product) {
     return <div>Loading...</div>;
@@ -45,7 +45,7 @@ export default function DetailItem() {
           <h1 className="text-[40px] font-bold text-[#F74D4D]">{product.name}</h1>
           <p>stock : {product.stock}</p>
         </div>
-        <div className="relative overflow-y-auto hide-scrollbar w-full h-[300px] gap-[10px] flex flex-col w-[59%] text-[13px]">
+        <div className="relative description overflow-y-auto hide-scrollbar w-full h-[300px] gap-[10px] flex flex-col w-[59%] text-[13px]">
           {product.description}
         </div>
         <h1 className="text-right font-bold text-[20px] text-[#F74D4D]">
