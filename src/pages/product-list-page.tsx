@@ -1,4 +1,5 @@
 import { CreateProduct } from "@/components/dialogs/add-product";
+import { DeleteProduct } from "@/components/dialogs/delete-product";
 import { EditProduct } from "@/components/dialogs/edit-product";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -26,18 +27,18 @@ export default function ProductListPage() {
     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(number);
   };
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await axios.get<Product[]>("http://localhost:8080/api/products"); // Update the endpoint URL if necessary
-        setProducts(response.data);
-      } catch (err) {
-        setError("Failed to fetch products");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get<Product[]>("http://localhost:8080/api/products"); // Update the endpoint URL if necessary
+      setProducts(response.data);
+    } catch (err) {
+      setError("Failed to fetch products");
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchProducts();
   }, []);
 
@@ -92,10 +93,8 @@ export default function ProductListPage() {
                 <td className="p-2 border-b text-left">{item.stock}</td>
                 <td className="py-2 px-4 border-b text-left">
                   <div className="flex h-[30px] gap-[15px]">
-                  <EditProduct productId={parseInt(item.id)} />
-                    <button className="rounded-[5px] w-[100px] bg-[#F74D4D]">
-                      Delete
-                    </button>
+                    <EditProduct productId={parseInt(item.id)} />
+                    <DeleteProduct productId={parseInt(item.id)} onDelete={fetchProducts} />
                   </div>
                 </td>
               </tr>
