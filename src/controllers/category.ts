@@ -1,19 +1,29 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 
+// Create a single PrismaClient instance and reuse it
+const prisma = new PrismaClient();
+
 export const getAllCategories = async (req: Request, res: Response) => {
   try {
-    const prisma = new PrismaClient();
     const categories = await prisma.category.findMany({
       orderBy: { createdAt: "asc" }, // Mengurutkan berdasarkan tanggal pembuatan
     });
     res.status(200).json(categories);
   } catch (error) {
     console.error("Error fetching categories:", error);
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch categories.",
-    });
+    // Check if it's a Prisma error
+    if (error instanceof Error) {
+      res.status(500).json({
+        success: false,
+        message: "Database error: " + error.message,
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch categories.",
+      });
+    }
   }
 };
 
@@ -21,7 +31,6 @@ export const getCategoryById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
-    const prisma = new PrismaClient();
     const category = await prisma.category.findUnique({
       where: { id: Number(id) },
     });
@@ -37,10 +46,57 @@ export const getCategoryById = async (req: Request, res: Response) => {
     res.status(200).json(category);
   } catch (error) {
     console.error("Error fetching category:", error);
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch category.",
+    // Check if it's a Prisma error
+    if (error instanceof Error) {
+      res.status(500).json({
+        success: false,
+        message: "Database error: " + error.message,
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch category.",
+      });
+    }
+  }
+};
+
+export const createCategory = async (req: Request, res: Response) => {
+  try {
+    const { name } = req.body; // Nama kategori dari body permintaan
+
+    // Validasi input
+    if (!name) {
+      res.status(400).json({
+        success: false,
+        message: "Category name is required.",
+      });
+      return;
+    }
+
+    const newCategory = await prisma.category.create({
+      data: { name },
     });
+
+    res.status(201).json({
+      success: true,
+      message: "Category created successfully.",
+      data: newCategory,
+    });
+  } catch (error) {
+    console.error("Error creating category:", error);
+    // Check if it's a Prisma error
+    if (error instanceof Error) {
+      res.status(500).json({
+        success: false,
+        message: "Database error: " + error.message,
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: "Failed to create category.",
+      });
+    }
   }
 };
 
@@ -57,7 +113,6 @@ export const editCategory = async (req: Request, res: Response) => {
       return
     }
 
-    const prisma = new PrismaClient();
     const updatedCategory = await prisma.category.update({
       where: { id: Number(id) },
       data: { name },
@@ -70,9 +125,17 @@ export const editCategory = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error("Error updating category:", error);
-    res.status(500).json({
-      success: false,
-      message: "Failed to update category.",
-    });
+    // Check if it's a Prisma error
+    if (error instanceof Error) {
+      res.status(500).json({
+        success: false,
+        message: "Database error: " + error.message,
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: "Failed to update category.",
+      });
+    }
   }
 };
