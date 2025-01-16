@@ -1,4 +1,5 @@
 import api from "@/axios";
+import { EditCategory } from "@/components/dialogs/edit-category";
 import { useEffect, useState } from "react";
 
 export default function CategoryListPage() {
@@ -8,19 +9,22 @@ export default function CategoryListPage() {
     []
   );
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await api.get("/categories");
-        setCategories(response.data);
-      } catch (error) {
-        setError("Failed to fetch categories:");
-        setCategories([]); // Set empty array on error
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchCategories = async () => {
+    try {
+      const response = await api.get("/categories");
+      const data = response.data.sort((a: { id: number }, b: { id: number }) =>
+        a.id - b.id
+      );
+      setCategories(data);
+    } catch (error) {
+      setError("Failed to fetch categories:");
+      setCategories([]); // Set empty array on error
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchCategories();
   }, []);
 
@@ -55,9 +59,7 @@ export default function CategoryListPage() {
                 <td className="p-2 border-b text-left">{item.name}</td>
                 <td className="py-2 px-4 border-b text-left">
                   <div className="flex h-[30px] gap-[15px]">
-                    <button className="rounded-[5px] w-[100px] bg-[#56C05A]">
-                      Edit
-                    </button>
+                    <EditCategory categoryId={parseInt(item.id)} />
                     <button className="rounded-[5px] w-[100px] bg-[#F74D4D]">
                       Delete
                     </button>
