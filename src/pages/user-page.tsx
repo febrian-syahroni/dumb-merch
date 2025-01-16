@@ -33,7 +33,7 @@ export default function UserPage() {
     };
 
     fetchProducts();
-  }, [products]);
+  }, []);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
@@ -42,14 +42,14 @@ export default function UserPage() {
     <div className="absolute top-0 pt-[90px] flex flex-col justify-start h-[95%] text-white w-full">
 
       <div className="flex flex-col h-full overflow-y-auto hide-scrollbar">
-        <h1 className="sticky top-0 w-full pb-[20px] px-[50px] bg-[#0B0B0B] text-3xl font-bold text-[#F74D4D]">Product</h1>
+        <h1 className="z-10 sticky top-0 w-full pb-[20px] px-[50px] bg-[#0B0B0B] text-3xl font-bold text-[#F74D4D]">Product</h1>
 
         {/* Products */}
         <div className="grid grid-cols-6 px-[50px] h-full w-full gap-[15px]">
           {/* Item */}
           {products.map((item) => (
 
-            <Link to={`/detail-product/${item.id}`} key={item.id} className="hover:scale-105 duration-300 flex flex-col overflow-hidden rounded-md h-[300px]">
+            <Link to={`/detail-product/${item.id}`} key={item.id} className="hover:scale-105 duration-300 flex flex-col overflow-hidden rounded-[5px] h-[300px]">
               <div className="w-full h-[70%]">
                 <img
                   className="object-cover object-center w-full h-full"
