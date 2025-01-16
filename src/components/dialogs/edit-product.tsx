@@ -7,79 +7,77 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "@/axios";
+import { useForm } from "react-hook-form";
 
-export function EditProduct({ productId }: { productId: string }) {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState<number | string>("");
-  const [stock, setStock] = useState<number | string>("");
-  const [categoryId, setCategoryId] = useState("");
-  const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
+interface Category {
+  id: number;
+  name: string;
+}
+
+interface EditProductProps {
+  productId: number;
+}
+
+interface ProductData {
+  name: string;
+  description: string;
+  price: number;
+  stock: number;
+  categoryId: number;
+  imageUrl?: File;
+}
+
+export function EditProduct({ productId }: EditProductProps) {
+  const { register, handleSubmit, setValue } = useForm<ProductData>();
+  const [categories, setCategories] = useState<Category[]>([]);
   const [image, setImage] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchProductAndCategories = async () => {
-      try {
-        // Fetch categories
-        const categoriesResponse = await axios.get("http://localhost:8080/api/categories");
-        setCategories(categoriesResponse.data.data || []);
+    // Fetch product data for the given productId
+    axios.get(`/products/${productId}`).then((response) => {
+      const product = response.data;
+      setValue("name", product.name);
+      setValue("description", product.description);
+      setValue("price", product.price);
+      setValue("stock", product.stock);
+      setValue("categoryId", product.categoryId);
+    });
 
-        // Fetch current product data
-        const productResponse = await axios.get(`http://localhost:8080/api/products/${productId}`);
-        const product = productResponse.data.data;
-
-        setName(product.name);
-        setDescription(product.description);
-        setPrice(product.price);
-        setStock(product.stock);
-        setCategoryId(product.categoryId);
-      } catch (error) {
-        console.error("Failed to fetch data:", error);
-        alert("Failed to load product data.");
+    // Fetch categories for the dropdown
+    axios.get(`/categories`).then((response) => {
+      if (Array.isArray(response.data)) {
+        setCategories(response.data);
+      } else {
+        console.error("Invalid categories data format:", response.data);
+        setCategories([]); // Ensure categories is always an array
       }
-    };
+    }).catch((error) => {
+      console.error("Error fetching categories:", error);
+    });
+  }, [productId, setValue]);
 
-    fetchProductAndCategories();
-  }, []);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const onSubmit = async (data: ProductData) => {
+    setLoading(true);
     const formData = new FormData();
-    formData.append("name", name);
-    formData.append("description", description);
-    formData.append("price", String(price));
-    formData.append("stock", String(stock));
-    formData.append("categoryId", categoryId);
+    formData.append("name", data.name);
+    formData.append("description", data.description);
+    formData.append("price", data.price.toString());
+    formData.append("stock", data.stock.toString());
+    formData.append("categoryId", data.categoryId.toString());
     if (image) {
       formData.append("image", image);
     }
 
-    setLoading(true);
     try {
-      const userStr = localStorage.getItem("user");
-      if (!userStr) {
-        alert("Please login first");
-        setLoading(false);
-        return;
-      }
-      const user = JSON.parse(userStr);
-
-      const response = await axios.put(`http://localhost:8080/api/products/${productId}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${user.token}`,
-        },
+      await axios.put(`/products/${productId}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
-
-      if (response.status === 200) {
-        alert("Product updated successfully!");
-      }
+      alert("Product updated successfully!");
+      window.location.reload();
     } catch (error) {
-      console.error("Error updating product:", error);
-      alert("Failed to update product");
+      console.error("Failed to edit product", error);
     } finally {
       setLoading(false);
     }
@@ -88,17 +86,18 @@ export function EditProduct({ productId }: { productId: string }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="rounded-[5px] w-[100px] bg-[#56C05A]" variant="outline">Edit Product</Button>
+        <Button className="rounded-[5px] w-[100px] bg-[#56C05A]" variant="outline">
+          Edit Product
+        </Button>
       </DialogTrigger>
       <DialogContent className="bg-gray-500 text-white sm:max-w-[425px] pb-[50px] lg:max-w-[90%] lg:h-[70%]">
         <DialogHeader>
           <DialogTitle>Edit Product</DialogTitle>
         </DialogHeader>
         <form
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit(onSubmit)}
           className="grid grid-cols-3 bg-gray-500 gap-4 w-full text-sm max-h-[300px] overflow-y-auto hide-scrollbar"
         >
-          {/* Kolom input dengan current value */}
           <div className="flex flex-col gap-4">
             <div className="flex flex-col">
               <label htmlFor="name" className="mb-2 font-semibold">
@@ -107,10 +106,8 @@ export function EditProduct({ productId }: { productId: string }) {
               <input
                 id="name"
                 type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                {...register("name", { required: true })}
                 className="border bg-transparent border-gray-300 p-2 rounded"
-                required
               />
             </div>
             <div className="flex flex-col">
@@ -120,10 +117,8 @@ export function EditProduct({ productId }: { productId: string }) {
               <input
                 id="price"
                 type="number"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
+                {...register("price", { required: true })}
                 className="border bg-transparent border-gray-300 p-2 rounded"
-                required
               />
             </div>
             <div className="flex flex-col">
@@ -133,10 +128,8 @@ export function EditProduct({ productId }: { productId: string }) {
               <input
                 id="stock"
                 type="number"
-                value={stock}
-                onChange={(e) => setStock(e.target.value)}
+                {...register("stock", { required: true })}
                 className="border bg-transparent border-gray-300 p-2 rounded"
-                required
               />
             </div>
             <div className="flex flex-col">
@@ -145,15 +138,13 @@ export function EditProduct({ productId }: { productId: string }) {
               </label>
               <select
                 id="categoryId"
-                value={categoryId}
-                onChange={(e) => setCategoryId(e.target.value)}
+                {...register("categoryId", { required: true })}
                 className="border bg-transparent border-gray-300 p-2 rounded"
-                required
               >
                 <option value="" disabled>
                   Select a category
                 </option>
-                {categories.map((category) => (
+                {categories && categories.map((category) => (
                   <option className="bg-gray-900" key={category.id} value={category.id}>
                     {category.name}
                   </option>
@@ -168,10 +159,8 @@ export function EditProduct({ productId }: { productId: string }) {
               </label>
               <textarea
                 id="description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                {...register("description", { required: true })}
                 className="border bg-transparent hide-scrollbar min-h-[200px] border-gray-300 p-2 rounded"
-                required
               />
             </div>
             <div className="flex flex-col">
@@ -182,6 +171,7 @@ export function EditProduct({ productId }: { productId: string }) {
                 id="image"
                 type="file"
                 accept="image/*"
+                {...register("imageUrl")}
                 onChange={(e) => setImage(e.target.files?.[0] || null)}
                 className="border border-gray-300 p-2 rounded"
               />
@@ -190,7 +180,8 @@ export function EditProduct({ productId }: { productId: string }) {
           <div>
             <button
               type="submit"
-              className={`absolute shadow-lg m-[25px] bottom-0 right-0 text-white px-4 py-2 rounded bg-[#3498db] ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+              className={`absolute shadow-lg m-[25px] bottom-0 right-0 text-white px-4 py-2 rounded bg-[#3498db] ${loading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               disabled={loading}
             >
               {loading ? "Submitting..." : "Update Product"}

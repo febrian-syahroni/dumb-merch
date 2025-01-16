@@ -1,4 +1,5 @@
 import { CreateProduct } from "@/components/dialogs/add-product";
+import { EditProduct } from "@/components/dialogs/edit-product";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
@@ -56,7 +57,7 @@ export default function ProductListPage() {
           <thead className="sticky top-0 shadow-lg">
             <tr className="h-[50px]">
               <th className="font-bold p-2 text-left bg-gray-800 text-white">
-                ID
+                No
               </th>
               <th className="font-bold p-2 text-left bg-gray-800 text-white">
                 Photo
@@ -81,7 +82,7 @@ export default function ProductListPage() {
           <tbody>
             {products.map(item => (
               <tr key={item.id} className="odd:bg-[#232323]">
-                <td className="p-2 border-b text-left">{item.id}</td>
+                <td className="p-2 border-b text-left">{products.indexOf(item) + 1}</td>
                 <td className="p-2 border-b text-left"><img width={50} src={item.imageUrl} alt="" /></td>
                 <td className="p-2 border-b text-left">{item.name}</td>
                 <td className="p-2 overflow-y-auto border-b text-left">
@@ -91,9 +92,7 @@ export default function ProductListPage() {
                 <td className="p-2 border-b text-left">{item.stock}</td>
                 <td className="py-2 px-4 border-b text-left">
                   <div className="flex h-[30px] gap-[15px]">
-                    <button className="rounded-[5px] w-[100px] bg-[#56C05A]">
-                      Edit
-                    </button>
+                  <EditProduct productId={parseInt(item.id)} />
                     <button className="rounded-[5px] w-[100px] bg-[#F74D4D]">
                       Delete
                     </button>
