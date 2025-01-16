@@ -7,7 +7,6 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
 import axios from "@/axios"
 import { ImSpinner3 } from "react-icons/im"
 
@@ -22,14 +21,13 @@ export function CreateProduct() {
   );
   const [image, setImage] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
 
   // Fetch categories from the server
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const response = await axios.get("/categories");
-        setCategories(response.data.data || []);
+        setCategories(response.data);
       } catch (error) {
         console.error("Failed to fetch categories:", error);
         setCategories([]); // Set empty array on error
@@ -66,7 +64,7 @@ export function CreateProduct() {
 
       if (response.status === 201) {
         alert("Product created successfully!");
-        navigate("/admin/product"); // Redirect to product list or any page
+        window.location.reload();
       }
     } catch (error) {
       console.error("Error creating product:", error);
