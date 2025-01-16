@@ -1,4 +1,5 @@
 import api from "@/axios";
+import { CreateCategory } from "@/components/dialogs/create-category";
 import { EditCategory } from "@/components/dialogs/edit-category";
 import { useEffect, useState } from "react";
 
@@ -32,9 +33,10 @@ export default function CategoryListPage() {
   if (error) return <div>{error}</div>;
 
   return (
-    <div>
+    <div className="flex flex-col gap-[20px]">
 
-      <h1 className="mb-[27px] text-xl font-bold">List Category</h1>
+      <h1 className="text-xl font-bold">List Category</h1>
+      <CreateCategory />
 
       {/* Table */}
       <div className="text-base bg-[#303030]">
