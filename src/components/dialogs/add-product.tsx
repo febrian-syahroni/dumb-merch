@@ -27,7 +27,10 @@ export function CreateProduct() {
     const fetchCategories = async () => {
       try {
         const response = await axios.get("/categories");
-        setCategories(response.data);
+        const data = response.data.sort((a: { id: number }, b: { id: number }) =>
+          a.id - b.id
+        );
+        setCategories(data);
       } catch (error) {
         console.error("Failed to fetch categories:", error);
         setCategories([]); // Set empty array on error
