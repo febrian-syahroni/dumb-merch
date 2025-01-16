@@ -14,7 +14,6 @@ import MessagePage from "./pages/message-page";
 import RoleUser from "./components/roleUser";
 import RoleAdmin from "./components/roleAdmin";
 
-
 const router = createBrowserRouter([
   { path: "/login", element: <LoginPage /> },
   { path: "/register", element: <RegisterPage /> },
