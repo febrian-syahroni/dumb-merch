@@ -48,7 +48,10 @@ export function EditProduct({ productId }: EditProductProps) {
     // Fetch categories for the dropdown
     axios.get(`/categories`).then((response) => {
       if (Array.isArray(response.data)) {
-        setCategories(response.data);
+        const data = response.data.sort((a: { id: number }, b: { id: number }) =>
+          a.id - b.id
+        );
+        setCategories(data);
       } else {
         console.error("Invalid categories data format:", response.data);
         setCategories([]); // Ensure categories is always an array
