@@ -7,10 +7,7 @@ export const getAllCategories = async (req: Request, res: Response) => {
     const categories = await prisma.category.findMany({
       orderBy: { createdAt: "asc" }, // Mengurutkan berdasarkan tanggal pembuatan
     });
-    res.status(200).json({
-      success: true,
-      data: categories,
-    });
+    res.status(200).json(categories);
   } catch (error) {
     console.error("Error fetching categories:", error);
     res.status(500).json({
