@@ -1,8 +1,10 @@
 import express from "express";
-import { getAllCategories } from "../controllers/category";
+import { editCategory, getAllCategories, getCategoryById } from "../controllers/category";
 
 const categoryRouter = express.Router();
 
 categoryRouter.get("/", getAllCategories);
+categoryRouter.get("/:id", getCategoryById);
+categoryRouter.put("/:id", editCategory);
 
 export default categoryRouter;
