@@ -139,3 +139,55 @@ export const editCategory = async (req: Request, res: Response) => {
     }
   }
 };
+
+export const deleteCategory = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params; // ID kategori dari parameter URL
+
+    // Pastikan ID valid
+    if (!id) {
+      res.status(400).json({
+        success: false,
+        message: "Category ID is required.",
+      });
+      return;
+    }
+
+    // Cek apakah kategori ada
+    const category = await prisma.category.findUnique({
+      where: { id: Number(id) },
+    });
+
+    if (!category) {
+      res.status(404).json({
+        success: false,
+        message: "Category not found.",
+      });
+      return;
+    }
+
+    // Hapus kategori
+    await prisma.category.delete({
+      where: { id: Number(id) },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Category deleted successfully.",
+    });
+  } catch (error) {
+    console.error("Error deleting category:", error);
+    // Check if it's a Prisma error
+    if (error instanceof Error) {
+      res.status(500).json({
+        success: false,
+        message: "Database error: " + error.message,
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: "Failed to delete category.",
+      });
+    }
+  }
+};
