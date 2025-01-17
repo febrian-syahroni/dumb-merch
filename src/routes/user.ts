@@ -1,9 +1,12 @@
 import express from "express";
 import UserController from "../controllers/user";
 import { authMiddleware } from "../middlewares/auth";
+import { upload } from "../middlewares/multer";
 
-const router = express.Router();
-router.put("/update", authMiddleware, UserController.updateProfile); // Route untuk Update informasi pengguna
-router.get("/profile", authMiddleware, UserController.getProfile); // Route untuk mendapatkan detail profil pengguna
+const userRouter = express.Router();
 
-export default router;
+userRouter.use(authMiddleware);
+userRouter.get("/profile", UserController.getProfile);
+userRouter.put("/update", upload.single('image'), UserController.updateProfile);
+
+export { userRouter };

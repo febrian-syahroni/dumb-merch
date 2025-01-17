@@ -104,33 +104,61 @@ export class UserService {
     return toUserResponse(user);
   }
 
-  static async updateProfile(userId: number, fullname: string, phone: string, address: string, genderId: number) {
-    const profile = await prismaClient.profile.upsert({
-      where: { userId },
-      create: {
-        fullname,
-        phone,
-        address,
-        genderId,
-        userId
+  static async updateProfile(
+    userId: number,
+    fullname: string,
+    phone: string,
+    address: string,
+    genderId: number,
+    imageUrl?: string
+  ) {
+    const updateData: any = {
+      profile: {
+        upsert: {
+          create: {
+            fullname,
+            phone,
+            address,
+            genderId,
+            ...(imageUrl && { image: imageUrl })
+          },
+          update: {
+            fullname,
+            phone,
+            address,
+            genderId,
+            ...(imageUrl && { image: imageUrl })
+          }
+        }
+      }
+    };
+
+    const user = await prismaClient.user.update({
+      where: {
+        id: userId
       },
-      update: {
-        fullname,
-        phone,
-        address,
-        genderId
+      data: updateData,
+      include: {
+        profile: true
       }
     });
 
-    return profile;
+    return user;
   }
 
   static async getProfile(userId: number) {
     const profile = await prismaClient.profile.findUnique({
       where: { userId },
-      include: { gender: true }
+      include: {
+        gender: true,
+        user: {
+          select: {
+            email: true
+          }
+        }
+      }
     });
-    
+
     return profile;
   }
 }
