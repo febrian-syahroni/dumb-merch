@@ -36,6 +36,12 @@ const RoleUser: React.FC<Props> = ({ allowedRoles }) => {
             Complain
           </NavLink>
           <NavLink
+            to="/"
+            className={({ isActive }) => (isActive ? "text-red-500" : "focus:text-red-500")}
+          >
+            Products
+          </NavLink>
+          <NavLink
             to="/profile"
             className={({ isActive }) => (isActive ? "text-red-500" : "focus:text-red-500")}
           >
