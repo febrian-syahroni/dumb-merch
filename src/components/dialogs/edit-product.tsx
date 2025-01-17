@@ -89,7 +89,7 @@ export function EditProduct({ productId }: EditProductProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="rounded-[5px] w-[100px] bg-[#56C05A]" variant="outline">
+        <Button className="rounded-[5px] h-full bg-[#56C05A] hover:bg-[#3D3D3D]">
           Edit Product
         </Button>
       </DialogTrigger>
@@ -183,7 +183,7 @@ export function EditProduct({ productId }: EditProductProps) {
           <div>
             <button
               type="submit"
-              className={`absolute shadow-lg m-[25px] bottom-0 right-0 text-white px-4 py-2 rounded bg-[#3498db] ${loading ? "opacity-50 cursor-not-allowed" : ""
+              className={`absolute hover:bg-[#2980b9] shadow-lg m-[25px] bottom-0 right-0 text-white px-4 py-2 rounded bg-[#3498db] ${loading ? "opacity-50 cursor-not-allowed" : ""
                 }`}
               disabled={loading}
             >

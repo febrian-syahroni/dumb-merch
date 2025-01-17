@@ -40,9 +40,9 @@ export default function CategoryListPage() {
       <CreateCategory />
 
       {/* Table */}
-      <div className="text-base bg-[#303030]">
+      <div className="text-base overflow-y-auto hide-scrollbar max-h-[350px] bg-[#303030]">
         <table className="table-fixed w-full border-b">
-          <thead className="">
+          <thead className="sticky top-0 shadow-lg">
             <tr className="h-[50px]">
               <th className="font-bold p-2 border-b text-left bg-[#303030] text-white">
                 No

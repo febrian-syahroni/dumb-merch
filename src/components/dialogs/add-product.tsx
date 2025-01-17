@@ -80,7 +80,7 @@ export function CreateProduct() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="bg-[#56C05A] w-1/6" variant="outline">Add Product</Button>
+        <Button className="bg-[#56C05A] hover:bg-[#3D3D3D] w-1/6 rounded-[5px]">Add Product</Button>
       </DialogTrigger>
       <DialogContent className="bg-gray-500 text-white sm:max-w-[425px] pb-[50px] lg:max-w-[90%] lg:h-[70%]">
         <DialogHeader>
