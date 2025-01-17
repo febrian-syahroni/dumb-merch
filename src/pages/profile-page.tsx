@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import photo from "@/assets/febrian.jpg";
+import photo from "@/assets/profile.jpeg"
 import ItemTransaction from "../modals/item-transaction";
 import api from "@/axios";
+import { EditProfile } from "@/components/dialogs/edit-profile";
 
 interface IUser {
   id: number;
@@ -13,6 +14,9 @@ interface IUser {
   gender?: {
     id: number;
     name: string;
+  };
+  user: {
+    email: string;
   };
 }
 
@@ -51,7 +55,7 @@ export default function ProfilePage() {
           <h1 className="font-bold text-[24px] text-[#F74D4D]">My Profile</h1>
           <div className="flex gap-[25px]">
             <img
-              className="rounded-md w-[256px] h-[355px] object-cover object-center"
+              className="rounded-[5px] w-[256px] h-[355px] object-cover object-center"
               src={user?.image || photo}
               alt="img"
             />
@@ -62,7 +66,7 @@ export default function ProfilePage() {
               </div>
               <div className="flex flex-col">
                 <h1 className="text-[15px] text-[#F74D4D]">Email</h1>
-                <h1>{user?.email}</h1>
+                <h1>{user?.user?.email}</h1>
               </div>
               <div className="flex flex-col">
                 <h1 className="text-[15px] text-[#F74D4D]">Phone</h1>
@@ -78,6 +82,7 @@ export default function ProfilePage() {
               </div>
             </div>
           </div>
+          <EditProfile onSuccess={getProfile} />
         </div>
 
         <div className="flex flex-col gap-[25px]">
@@ -85,7 +90,7 @@ export default function ProfilePage() {
             My Transaction
           </h1>
 
-          <div className="flex flex-col overflow-y-auto hide-scrollbar h-[355px] gap-[15px]">
+          <div className="flex flex-col overflow-y-auto hide-scrollbar h-[420px] gap-[15px]">
             {/* Transactions */}
             <ItemTransaction />
             <ItemTransaction />
