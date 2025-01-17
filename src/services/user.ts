@@ -104,7 +104,7 @@ export class UserService {
     return toUserResponse(user);
   }
 
-  static async updateProfile(userId: number, fullname: string, phone: number, address: string, genderId: number) {
+  static async updateProfile(userId: number, fullname: string, phone: string, address: string, genderId: number) {
     const profile = await prismaClient.profile.upsert({
       where: { userId },
       create: {
