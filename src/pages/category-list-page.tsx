@@ -1,5 +1,6 @@
 import api from "@/axios";
 import { CreateCategory } from "@/components/dialogs/create-category";
+import { DeleteCategory } from "@/components/dialogs/delete-category";
 import { EditCategory } from "@/components/dialogs/edit-category";
 import { useEffect, useState } from "react";
 
@@ -62,9 +63,7 @@ export default function CategoryListPage() {
                 <td className="py-2 px-4 border-b text-left">
                   <div className="flex h-[30px] gap-[15px]">
                     <EditCategory categoryId={parseInt(item.id)} />
-                    <button className="rounded-[5px] w-[100px] bg-[#F74D4D]">
-                      Delete
-                    </button>
+                    <DeleteCategory categoryId={parseInt(item.id)} />
                   </div>
                 </td>
               </tr>
