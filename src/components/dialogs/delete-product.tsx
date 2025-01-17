@@ -28,6 +28,8 @@ export function DeleteProduct({ productId, onDelete }: DeleteProductProps) {
         description: "Product deleted successfully",
       });
       onDelete?.();
+      alert("Product deleted successfully!");
+      window.location.reload();
     } catch (error) {
       console.error("Error deleting product:", error);
       toast({
