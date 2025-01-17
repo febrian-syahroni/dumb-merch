@@ -31,9 +31,7 @@ export default class UserController {
       }
 
       const profile = await UserService.getProfile(req.user.userId);
-      res.status(200).json({
-        data: profile,
-      });
+      res.status(200).json(profile);
     } catch (e) {
       next(e);
     }
