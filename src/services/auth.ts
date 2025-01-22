@@ -8,11 +8,12 @@ const secret = process.env.JWT_SECRET!;
 
 const registerSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(6)
+  password: z.string().min(6),
+  name: z.string().min(1)
 });
 
 export const registerUserService = async (data: any) => {
-  const { email, password } = registerSchema.parse(data);
+  const { email, password, name } = registerSchema.parse(data);
   const roleId = data.roleId || 2;
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -21,7 +22,18 @@ export const registerUserService = async (data: any) => {
       email,
       password: hashedPassword,
       roleId,
+      profile: {
+        create: {
+          fullname: name,
+          phone: "",
+          address: "",
+          genderId: 1, // Default gender ID
+        }
+      }
     },
+    include: {
+      profile: true
+    }
   });
 
   return user;
